@@ -4,6 +4,10 @@ import populateSelect from './components/SelectMenu'
 
 const makeChart = (lideres) => {
   populateSelect.populateSelect();
+  console.log(lideres);
+  const selects = document.getElementById('line');
+
+
   const listLideres = lideres.map((arr) => {
     return arr.profile
   })
@@ -17,19 +21,13 @@ const makeChart = (lideres) => {
   let tempLider = [];
   let tempMes = [];
   let tempFbSeguidores = [];
-  let a = [];
-  let b = [];
-  let c = [];
+  let selectResult = listLideres[0];
   listLideres.forEach((lider, index) => {
-    if (lider === "Jair Bolsonaro") {
+    if (lider === selectResult) {
       tempLider.push(lider);
       tempMes.push(month[index]);
       tempFbSeguidores.push(fbSeguidores[index]);
-    } else if (lider === "Donald Trump") {
-      a.push(lider);
-      b.push(month[index]);
-      c.push(fbSeguidores[index]);
-    }
+    } 
   })
 
   const chart = new Chart('chart', {
@@ -38,17 +36,34 @@ const makeChart = (lideres) => {
     data: {
       labels: tempMes,
       datasets: [{
-        label: 'Bolsonaro',
+        label: listLideres[0],
         data: tempFbSeguidores,
         borderColor: "#3e95cd"
       }, 
-      {label: 'Trumb',
-      data: c,
-      borderColor: '#555',
-    }
+ 
     ]
     },
     options: {showLines: true}
+  })
+  selects.addEventListener('change', (e) => {
+    tempLider = [];
+    tempMes = [];
+    tempFbSeguidores = [];
+    const selectResult = e.target.value;
+    listLideres.forEach((lider, index) => {
+      if (lider === selectResult) {
+        tempLider.push(lider);
+        tempMes.push(month[index]);
+        tempFbSeguidores.push(fbSeguidores[index]);
+      } 
+    })
+  
+    console.log(e.target.value);
+    chart.data.datasets.forEach((dataset) => {
+      dataset.label = tempLider[0];
+      dataset.data = tempFbSeguidores;
+    });
+    chart.update();
   })
 }
 
