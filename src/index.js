@@ -1,9 +1,9 @@
 import * as d3 from 'd3'
 import Chart from 'chart.js';
-
+import populateSelect from './components/SelectMenu'
 
 const makeChart = (lideres) => {
-  console.log(lideres);
+  populateSelect.populateSelect();
   const listLideres = lideres.map((arr) => {
     return arr.profile
   })
