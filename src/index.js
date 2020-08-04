@@ -1,41 +1,49 @@
 import * as d3 from 'd3'
 import Chart from 'chart.js';
 import populateSelect from './components/SelectMenu';
-import lineGraph from './components/genLineLider'
-
+import lineGraph from './components/genLineLider';
+import selectData from './data/selectData'
 const makeChart = (lideres) => {
 
 
   const { genLiderLine, arrGenSearch, arrGenBase} = lineGraph;
   populateSelect.populateSelect();
-  const selects = document.getElementById('line');
-  const {listLideres, month, fbSeguidores} = arrGenBase(lideres);
-
-
-
+  const selects = document.querySelector('.line');
+  const {listLideres, month, fbSeguidores} = arrGenBase(lideres, null);
   const chart = genLiderLine(listLideres, listLideres[0], month, fbSeguidores );
+  let count = 0;
+  const colors = ['red', 'green', 'blue', 'purple', 'yellow', 'orange']
 
-  selects.addEventListener('change', (e) => {
+    selects.addEventListener('change', (e) => {
+      const random = Math.floor(Math.random() * colors.length);
+      const color = colors[random];
+      const selectResult = e.target.value;
+      const obj = selectData.selectData();
+      if (obj.selectTwo.includes(selectResult)) return '';
+  
+      obj.selectTwo.push(selectResult);
+      const { tempLider, tempMes, tempFbSeguidores } = arrGenSearch(listLideres, selectResult ,  month, fbSeguidores );
+  
+  
+      chart.data.datasets.push({
+        label: selectResult,
+        data: tempFbSeguidores,
+        borderColor: color
+      }, )
+      chart.update();
+    })
 
-    const selectResult = e.target.value;
-    // listLideres.forEach((lider, index) => {
-    //   if (lider === selectResult) {
-    //     tempLider.push(lider);
-    //     tempMes.push(month[index]);
-    //     tempFbSeguidores.push(fbSeguidores[index]);
-    //   }
-    // })
-
-    const { tempLider, tempMes, tempFbSeguidores } = arrGenSearch(listLideres, selectResult ,  month, fbSeguidores );
 
 
-    console.log(e.target.value);
-    chart.data.datasets.forEach((dataset) => {
-      dataset.label = tempLider[0];
-      dataset.data = tempFbSeguidores;
-    });
-    chart.update();
-  })
+
+
+
+
+
+  
+  const { addPresidentSelect } = addSelect;
+  const presidenteBtn = document.getElementById('addPresident');
+  presidenteBtn.addEventListener('click', addPresidentSelect )
 }
 
 d3.csv('./src/dados.csv').then(makeChart)

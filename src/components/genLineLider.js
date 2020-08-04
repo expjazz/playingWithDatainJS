@@ -20,7 +20,7 @@ const genLiderLine = (list, lider, month, fbSeguidores ) => {
   return chart;
 }
 
-const arrGenBase = (lideres) => {
+const arrGenBase = (lideres, socialMedia) => {
   const listLideres = lideres.map((arr) => {
     return arr.profile
   })
@@ -49,7 +49,6 @@ const arrGenSearch = (list, queryLider, month, fbSeguidores ) => {
       obj.tempFbSeguidores.push(fbSeguidores[index]);
     } 
   })
-  console.log(obj)
   return obj
 }
 
